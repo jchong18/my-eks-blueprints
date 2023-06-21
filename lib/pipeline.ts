@@ -10,10 +10,24 @@ export default class PipelineConstruct extends Construct {
     const account = props?.env?.account!;
     const region = props?.env?.region!;
     
+    const addOns = [
+        new blueprints.ArgoCDAddOn(),
+        new blueprints.VpcCniAddOn(),
+        new blueprints.CoreDnsAddOn(),
+        new blueprints.KubeProxyAddOn(),
+        
+        // Self-managed Add-ons
+        new blueprints.addons.AwsForFluentBitAddOn(),
+        new blueprints.addons.AwsLoadBalancerControllerAddOn(),
+        new blueprints.addons.ClusterAutoScalerAddOn(),
+        new blueprints.addons.EfsCsiDriverAddOn(),
+        new blueprints.addons.MetricsServerAddOn()
+    ];
+    
     const blueprint = blueprints.EksBlueprint.builder()
     .account(account)
     .region(region)
-    .addOns()
+    .addOns(...addOns)
     .teams();
   
     blueprints.CodePipelineStack.builder()
